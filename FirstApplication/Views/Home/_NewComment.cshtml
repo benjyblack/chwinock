@@ -1,0 +1,22 @@
+﻿@model Chwinock.Models.Comment
+
+<form name="_new-comment" class="form-horizontal" method="post" action="/Home/PostComment" id="new-comment">
+    
+    <label class="label-tab">Comment</label>
+
+    @Html.TextAreaFor(m => m.Content, new { cols = "100", rows = "5", style = "width:1086px;" })
+
+    @Html.HiddenFor(x => x.ReportID)
+    <input type="hidden" name="UserID" value />
+
+     
+    <input type="submit" style="margin-top:10px;display:block;" class="btn btn-primary"/>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        FB.api('/me', function (response) {
+            $('input[name="UserID"]').attr('value', response.id);
+        });
+    });
+</script>

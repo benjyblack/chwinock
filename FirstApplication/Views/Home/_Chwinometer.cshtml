@@ -1,0 +1,28 @@
+﻿@model Chwinock.Models.Rating
+
+<form name="_rate" class="form-horizontal" method="post" action="/Home/Rate" id="chwinometer"> 
+    <div class="rating">
+
+        <a href="#" class="one_1"/>
+
+        <a href="#" class="one_2"/>
+
+        <a href="#" class="one_3"/>
+
+    </div>
+    
+    @Html.HiddenFor(x => x.ReportID)
+    <input type="hidden" id="rating-choice" name="Rank" value="0" />
+    <input type="hidden" id="userID" name="UserID" value="" />
+</form>
+
+<script type="text/javascript">
+    $('.rating').children('a').click(function () {
+        $('#rating-choice').attr('value', $(this).attr('class').split('_')[1]);
+
+        FB.api('/me', function (response) {
+            $('#userID').attr('value', response.id);
+            $('#chwinometer').submit();
+        });
+    });
+</script>

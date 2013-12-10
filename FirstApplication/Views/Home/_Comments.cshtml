@@ -1,0 +1,11 @@
+﻿@model IEnumerable<Chwinock.Models.Comment>
+           
+@foreach (var c in Model)
+{
+    <div class="comment">
+        <p class="author">@c.User.ChillName</p>
+        <p class="date">@c.CreateDate.ToLocalTime()</p>
+        <p class="content">@c.Content</p>
+    </div>
+}
+

@@ -1,0 +1,97 @@
+﻿@model Chwinock.Models.Report
+
+@{
+    ViewBag.Title = "Create Report";
+    
+    
+}
+
+<div class="admin-page">
+    <form class="form-horizontal" method="post" action="/Admin/@ViewBag.Action" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Report</legend>
+
+            @Html.HiddenFor(model => model.ReportID)
+
+            @Html.HiddenFor(model => model.PhotoID)
+            @Html.HiddenFor(model => model.Photo.Url)
+            @Html.HiddenFor(model => model.Photo.CreateDate)
+            @Html.HiddenFor(model => model.Photo.Lat)
+            @Html.HiddenFor(model => model.Photo.Lng)
+
+            <h1>Photo</h1>
+
+            <div class="control-group">
+                <div class="controls">
+                    <input class="btn" type="file" name="Url" />
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="Photo_Title">Title</label>
+                <div class="controls">    
+                    @Html.TextBoxFor(m => m.Photo.Title)
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="Photo_Caption">Caption</label>
+                <div class="controls">    
+                    @Html.TextAreaFor(m => m.Photo.Caption)
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="Photo_Location">Location</label>
+                <div class="controls"> 
+                    @Html.TextBoxFor(m => m.Photo.Location)
+                </div>
+            </div>
+
+            <input type="hidden" name="PhotoDataChoice" value="" id="btn-input" />
+            <div class="control-group">
+                <label class="control-label" for="Radio_Buttons">Geotag</label>
+                <div class="controls">
+                    <div name="Radio_Buttons" class="btn-group" data-toggle="buttons-radio">
+                      <button type="button" class="btn btn-choice" value="Metadata">Metadata</button>
+                      <button type="button" class="btn btn-choice" value="Location">Location</button>
+                    </div>
+                </div>
+            </div>
+    
+            <h1>Report</h1>
+
+            <div class="control-group">
+                <label class="control-label" for="Title">Title</label>
+                <div class="controls">    
+                    @Html.TextBoxFor(m => m.Title)
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="Author">Author</label>
+                <div class="controls">    
+                    @Html.TextBoxFor(m => m.Author)
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="Content">Content</label>
+                <div class="controls"> 
+                    @Html.TextAreaFor(m => m.Content, new { cols="100", rows="10", style="width:660px"})
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $('.btn-choice').click(function () {
+        $('#btn-input').attr('value', $(this).attr('value'));
+    });
+
+    $('input[name="Author"]').typeahead({
+        source: ["Ben Black", "Erin Carrieres"]
+    });
+</script>

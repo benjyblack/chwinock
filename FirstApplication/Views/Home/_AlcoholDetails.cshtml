@@ -1,0 +1,21 @@
+﻿@model Chwinock.Models.Alcohol
+
+<div class="page-lines mini-page-lines"></div>
+<div class="page mini-page">
+    <div class="page-head mini-page-head"></div>
+    <div class="page-content mini-page-content">
+        <p><span class="descriptor">Name</span> @Model.Name</p>
+        <p><span class="descriptor">Type</span> @Model.Type</p>
+        <p><span class="descriptor">Price</span> $@Model.Price</p>
+        <p><span class="descriptor">Strength</span> @Model.Percentage%</p>
+        <p><span class="descriptor">Thoughts</span><br /> It was a good wine but there were some problems like blah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blahblah blah blah blah</p>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // CSS elements
+        $('.mini-page-lines').height($('.modal-body').height());
+        $('.mini-page-lines').width($('.modal-body').width());
+    });
+</script>

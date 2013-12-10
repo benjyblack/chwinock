@@ -1,0 +1,92 @@
+﻿
+
+@{
+    ViewBag.Title = "Manage";
+}
+ 
+<div class="admin-page">
+    <h2>Manage</h2>
+
+    <div class="navbar">
+      <div class="navbar-inner">
+        <ul class="nav">
+          <li id="reports-tab" class="active">
+            <a href="#">Reports</a>
+          </li>
+          <li id="songs-tab">
+            <a href="#">Music</a>
+          </li>
+          <li id="alcohol-tab">
+            <a href="#">Alcohol</a>
+          </li>
+          <li id="users-tab">
+            <a href="#">Users</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div id="manage-content">
+    </div>
+    
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $.ajax({
+            url: "/Admin/ManageReports",
+            success: function (data) {
+                $('#manage-content').html(data);
+            }
+        });
+    });
+
+    $('#reports-tab').click(function () {
+        $.ajax({
+            url: "/Admin/ManageReports",
+            success: function (data) {
+                $('.nav').children().removeClass('active');
+
+                $('#reports-tab').addClass('active');
+
+                $('#manage-content').html(data);
+            }
+        });
+    });
+    $('#songs-tab').click(function () {
+        $.ajax({
+            url: "/Admin/ManageSongs",
+            success: function (data) {
+                $('.nav').children().removeClass('active');
+
+                $('#songs-tab').addClass('active');
+
+                $('#manage-content').html(data);
+            }
+        });
+    });
+    $('#alcohol-tab').click(function () {
+        $.ajax({
+            url: "/Admin/ManageAlcohol",
+            success: function (data) {
+                $('.nav').children().removeClass('active');
+
+                $('#alcohol-tab').addClass('active');
+
+                $('#manage-content').html(data);
+            }
+        });
+    }); 
+    $('#users-tab').click(function () {
+        $.ajax({
+            url: "/Admin/ManageUsers",
+            success: function (data) {
+                $('.nav').children().removeClass('active');
+
+                $('#users-tab').addClass('active');
+
+                $('#manage-content').html(data);
+            }
+        });
+    });
+</script>

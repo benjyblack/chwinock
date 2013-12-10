@@ -1,0 +1,176 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <link runat="server" rel="shortcut icon" href="../../Content/images/favicon.ico" type="image/x-icon" />
+    <link href="@Url.Content("~/Content/bootstrap.min.css")" rel="stylesheet" type="text/css" />
+    <link href="../../Content/Site.css?v.xxzzs11" rel="stylesheet" type="text/css" />
+    @*<link href="../../Content/SiteOld.css" rel="stylesheet" type="text/css" />*@
+    @RenderSection("Style", false)
+
+    <script src="../../Scripts/jquery-1.8.3.min.js" type="text/javascript"></script>
+    <script src="../../Scripts/bootstrap.min.js" type="text/javascript"></script>
+    @RenderSection("Scripts", false)
+</head>
+<body>
+    <div id="fb-root"></div>
+    <script type="text/javascript">
+        var loggedIn = false;
+
+        // Additional JS functions here
+        window.fbAsyncInit = function () {
+            FB.init({
+                appId: '308061405976239', // App ID
+                channelUrl: 'eightychwinocks.azurewebsites.net/Content/Facebook/channel.html', // Channel File
+                status: true, // check login status
+                cookie: true, // enable cookies to allow the server to access the session
+                xfbml: true  // parse XFBML
+            });
+
+
+            FB.getLoginStatus(function (response) {
+                if (response.status === 'connected') {
+                    console.log("Connected");
+
+                    loggedIn = true;
+
+                    FB.api('/me', function (response) {
+
+                        $.ajax({
+                            url: "/Home/ChillNameFor?userId=" + response.id,
+                            type: "get",
+                            success: function (data) {
+                                // If they haven't taken a chill name yet, show the helper
+                                if (response.name == data) {
+                                    $('.first-time-helper').show();
+                                }
+
+                                $('#username').text(data);
+                            }
+                        });
+
+                        $('.members-only').show();
+                        $('.guest-message').hide();
+
+                        $('#generate-name').attr('value', response.id).show();
+                        $('.loggedinas-label').show();
+
+                        if (response.name == "1650450073") {
+                            $(".admin-buttons").show();
+                        }
+                    });
+
+                } else if (response.status === 'not_authorized') {
+                    // not_authorized
+                    handleNotConnected();
+                    console.log("Not authorized");
+                } else {
+                    // not_logged_in
+                    handleNotConnected();
+                    console.log("Else");
+                }
+            });
+
+            $('#facebook-login').click(function () {
+                FB.login(function (response) {
+                    if (response.authResponse) {
+                        FB.api('\me', function (result) {
+                            $.ajax({
+                                url: "/Admin/CreateUser?userId=" + result.id + "&name=" + result.name,
+                                type: "post",
+                                success: function (data) {
+                                    location.reload();
+                                }
+                            });
+                        });
+
+                    } else {
+                        // cancelled
+                    }
+                });
+            });
+        };
+
+        // Load the SDK Asynchronously
+        (function (d) {
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) { return; }
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            ref.parentNode.insertBefore(js, ref);
+        } (document));
+
+        //Likes
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = "//connect.facebook.net/en_US/all.js#xfbml=1&appId=308061405976239";
+          fjs.parentNode.insertBefore(js, fjs);
+        } (document, 'script', 'facebook-jssdk'));
+
+
+        function handleNotConnected() {
+            $('#facebook-login').show();
+            $('.members-only').hide();
+            $('.guest-message').show();
+        }
+
+        $(document).ready(function () {
+            // Name generator
+            $("#generate-name").click(function () {
+                $('.first-time-helper').hide();
+                $("#generate-name button").text("Chillifying...");
+                $.ajax({
+                    url: "/Home/GenerateChillNameFor?userId=" + $(this).attr('value'),
+                    type: "post",
+                    success: function (data) {
+                        $("#generate-name button").text("Chillify Name");
+                        $('#username').text(data);
+                    }
+                });
+            });
+
+            // Browser-check
+            navigator.sayswho = (function () {
+                var N = navigator.appName, ua = navigator.userAgent, tem;
+                var M = ua.match(/(opera|chrome|safari|firefox|msie)\/?\s*(\.?\d+(\.\d+)*)/i);
+                if (M && (tem = ua.match(/version\/([\.\d]+)/i)) != null) M[2] = tem[1];
+                M = M ? [M[1], M[2]] : [N, navigator.appVersion, '-?'];
+                return M;
+            })();
+
+            if (navigator.sayswho[0] != "Chrome") {
+                alert("This website was made for Google Chrome, you may have trouble if you're using a different browser.");
+            }
+        });
+
+    </script>
+
+    
+    <div id="header">
+        <div class="banner">
+            <div class="banner-content">
+                <a href="/Home"><img class="banner-logo" src="../../Content/images/logo.png" /></a>
+                <span class="banner-controls">
+                    <a href="/Admin/Manage" class="hidden admin-buttons" id="manage" ><button class="btn btn-primary">Manage</button></a>
+                    <a href="/Home/About"><button class="btn btn-primary">About</button></a>
+                    <span style="position:relative;">
+                        <a value="" class="hidden" id="generate-name"><button class="btn btn-primary">Chill-ify Name</button></a>
+                        <div class="first-time-helper hidden"></div>
+                    </span>
+                    <button id="facebook-login" class="btn btn-primary hidden fb">Log In with Facebook</button>
+                    <span class="loggedinas-label hidden fb">Logged in as <span id="username"></span></span>
+                </span>
+            </div>
+        </div>
+    </div>
+        <div class="main">
+            @RenderBody()
+        
+            <div id="footer">
+                <div class="fb-like" data-href="http://eightychwinocks.azurewebsites.net/" data-send="true" data-width="450" data-show-faces="true" data-font="lucida grande"></div>
+            </div>
+        </div>
+</body>
+</html>

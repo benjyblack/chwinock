@@ -1,0 +1,55 @@
+﻿@model Chwinock.Models.Report
+
+@{
+    var rating = "";
+    
+    if(Model.AverageRating <= 1)
+    {
+        rating = "Chwinawww";
+    }
+    else if(Model.AverageRating > 1 && Model.AverageRating <= 2)
+    {
+        rating = "Chwinot?";
+    }
+    else
+    {
+        rating = "Chwinawesome!";
+    }
+}
+
+<div class="page-head">
+    <h1>@Model.Title <span class="create_date">@Model.CreateDate.ToString("D")</span></h1>
+</div>
+<div class="page-content">
+    <dl class="criteria dl-horizontal">
+        <dt>Drinks</dt>
+        @foreach (var a in @Model.Alcohols)
+        {
+            <dd><a data-toggle="modal" href="/Home/AlcoholDetails?alcoholId=@a.AlcoholID" data-target="#alcohol-details">@a.Name</a></dd>
+        }
+        @* modal for alcohol details *@
+
+        <dt>Music</dt>
+        @foreach (var s in @Model.Songs)
+        {
+            <dd><a href="@s.Url" target=_blank>@s.Artist - @s.Name</a></dd>
+        }
+    </dl>
+
+    <p>@Html.Raw(@Model.Content)</p>
+
+    @*<h3 style="margin:0px; text-align:right;">Rating: <span style="font-weight:normal; color:Red;">@rating</span></h3>
+    <p style="text-align:right;">based on @Model.Ratings.Count() ratings</p>*@
+
+    <div id="alcohol-details" class="modal hide fade">
+        <div class="modal-body" style="padding:0px;">        
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        // CSS elements
+        $('.page-lines').height($('.page').height() - 75);
+    });
+</script>

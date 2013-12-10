@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Chwinock.Models.Alcohol>
+
+<p>
+    <a href="/Admin/CreateAlcohol"><button class="btn btn-primary">Add Drink</button></a>
+</p>
+
+<table class="table">
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Type
+            </th>
+            <th>
+                Price
+            </th>
+            <th>
+                Percentage
+            </th>
+            <th>
+                Thoughts
+            </th>
+            <th style="width: 122px;"></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                $@Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Percentage)%
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Thoughts)
+            </td>
+            <td>
+                <a href="/Admin/EditAlcohol?alcoholId=@item.AlcoholID" class="btn btn-warning">Edit</a>
+                <a href="/Admin/DeleteAlcohol?alcoholId=@item.AlcoholID" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>

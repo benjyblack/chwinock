@@ -1,0 +1,74 @@
+﻿@model Chwinock.Models.CreateAlcoholVM
+
+@{
+    ViewBag.Title = "Create Alcohol";
+
+    var index = 0;
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div class="admin-page">
+    <form class="form-horizontal" method="post" action="/Admin/@ViewBag.Action" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Drink</legend>
+            @Html.HiddenFor(model => model.Alcohol.AlcoholID)
+
+            <div class="control-group">
+                    <label class="control-label" for="Name">Name</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Alcohol.Name)
+                    </div>
+            </div>
+            <div class="control-group">
+                    <label class="control-label" for="Type">Type</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Alcohol.Type)
+                    </div>
+            </div>
+            <div class="control-group">
+                    <label class="control-label" for="Price">Price</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Alcohol.Price)
+                    </div>
+            </div>
+            <div class="control-group">
+                    <label class="control-label" for="Percentage">Percentage</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Alcohol.Percentage)
+                    </div>
+            </div>
+            <div class="control-group">
+                    <label class="control-label" for="Thoughts">Thoughts</label>
+                    <div class="controls">    
+                        @Html.TextAreaFor(m => m.Alcohol.Thoughts)
+                    </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="controls">
+                    @foreach (var r in Model.Reports)
+                    {
+                        @:<input type="checkbox" id="@r.ReportID" name="AssociatedReports" value="@r.ReportID" /> @r.Title
+                        index++; 
+                    }
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @foreach (var r in Model.Alcohol.Reports){
+            @:$('#@r.ReportID').prop('checked', true);
+        }
+    });
+</script>

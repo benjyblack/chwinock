@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Chwinock.Models.Report>
+          
+<p>
+    <a href="/Admin/CreateReport"><button class="btn btn-primary">Add Report</button></a>
+</p>
+
+<table class="table">
+        <tr>
+            <th>
+                # of Ratings
+            </th>
+            <th>
+                Rating
+            </th>
+            <th>
+                Title
+            </th>
+            <th>
+                Author
+            </th>
+            <th>
+                Created
+            </th>
+            <th style="width: 122px;"></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @item.Ratings.Count()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AverageRating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreateDate)
+            </td>
+            <td>
+                <a href="/Admin/EditReport?reportId=@item.ReportID" class="btn btn-warning">Edit</a>
+                <a href="/Admin/DeleteReport?reportId=@item.ReportID" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>

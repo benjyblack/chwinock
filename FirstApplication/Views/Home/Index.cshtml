@@ -1,0 +1,192 @@
+﻿@model IEnumerable<Chwinock.Models.Report>
+
+@{
+    ViewBag.Title = "Around the World in Eighty Chwinocks";
+    
+    var baseUrl = "http://eightychwinocks.blob.core.windows.net/photos/";
+}
+
+<div id="stamp-underlay"></div>
+<div id="myCarousel" class="carousel slide stamp">
+    <!-- Carousel items -->
+    <div class="carousel-inner">
+        @foreach (var p in Model)
+        {
+            <div class="item">
+                <input type="hidden" name="reportId" value="@p.ReportID" />
+                    
+                <a class="fancybox" rel="group" href="@baseUrl@p.Photo.Url">
+                    <img src="@baseUrl@p.Photo.Url" />
+                </a>
+            </div>
+        }
+    </div>
+    <!-- Carousel nav -->
+    <a class="carousel-control left" href="#myCarousel" data-slide="prev"></a>
+    <a class="carousel-control right" href="#myCarousel" data-slide="next"></a>
+</div>
+
+<div id="wine-stain"></div>
+<div id="map_canvas" style="-webkit-transform:translateZ(1);"></div>
+
+<div class="page-lines"></div>
+<div class="page"></div>
+
+
+<div class="members-only hidden">
+    @*<div class="chwinometer-section"></div>*@
+    <div class="add-comment-section"></div>
+    <div class="comments-section"></div>
+</div>
+<p class='guest-message'>Please login to use the Chwinometer and comments.</p>
+
+@section Style
+{
+    <link href="../../Content/jquery.fancybox.css" rel="stylesheet" type="text/css" />
+    <link href="../../Content/jquery.fancybox-buttons.css" rel="stylesheet" type="text/css" />
+    <script src="../../Scripts/jquery.fancybox-buttons.js" type="text/javascript"></script>
+}
+
+@section Scripts
+{
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+    <script src="../../Scripts/jquery.fancybox.js" type="text/javascript"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+        
+            $(".fancybox").fancybox({
+                openEffect	: 'elastic',
+    	        closeEffect	: 'elastic',
+                arrows: false
+            });
+
+            // to override google maps style binding
+            setTimeout(function() {
+                $("#map_canvas").attr('style', "position: relative; background-color: rgb(229, 227, 223); overflow: hidden;");
+            }, 2000);
+
+            $($(".carousel-inner").children()[0]).addClass("active");
+
+            $('.carousel').carousel({
+                interval: false
+            });
+
+            $('.carousel').bind('slid', function () {
+                var targetPhotoId = $('.active').children('input[name="reportId"]').attr('value');
+
+                var targetMarker;
+
+                for (var i = 0; i < photoMarkers.length; i++){
+                    if (photoMarkers[i].id == targetPhotoId){
+                        targetMarker = photoMarkers[i];
+                    }
+                }
+
+                map.panTo(targetMarker.position);
+
+                loadReport(targetPhotoId);
+            });
+
+            // load initial report
+            loadReport($('.active').children('input[name="reportId"]').attr('value'));
+
+            initialize();
+        }); 
+
+        function loadReport(reportId){
+            $.ajax({
+                   url: "/Home/Report?reportId=" + reportId,
+                   success: function(data) {
+                        $('.page').html(data);
+                  }
+                });
+
+            if (loggedIn) {
+                $('.members-only').show();
+                $('.guest-message').hide();
+            }
+
+            $.ajax({
+                url: "/Home/Chwinometer?reportId=" + reportId,
+                success: function (data) {
+                    $('.chwinometer-section').html(data);
+                }
+            });
+
+            $.ajax({
+                url: "/Home/NewComment?reportId=" + reportId,
+                success: function (data) {
+                    $('.add-comment-section').html(data);
+                }
+            });
+
+            $.ajax({
+                url: "/Home/CommentsFor?reportId=" + reportId,
+                success: function (data) {
+                    $('.comments-section').html(data);
+                }
+            });
+        }
+
+        var map;
+        var photoMarkers = [];
+        var bounds = new google.maps.LatLngBounds();
+        var activeInfoWindow;
+
+        function initialize() {
+            var mapOptions = {
+                zoom: 8,
+                center: new google.maps.LatLng(-34.397, 150.644),
+                mapTypeId: google.maps.MapTypeId.ROADMAP,
+                zoomControl: false,
+                panControl: false,
+                scaleControl: false,
+                rotateControl: false,
+
+            };
+            map = new google.maps.Map(document.getElementById('map_canvas'), mapOptions);
+
+            
+            var count = 0;
+            @foreach (var p in Model)
+            {
+                <text>
+                    var latLng = new google.maps.LatLng(@p.Photo.Lat, @p.Photo.Lng);
+                    bounds.extend(latLng);
+                    var marker = new google.maps.Marker({
+                          position: latLng,
+                          map: map,
+                          id: "@p.ReportID",
+                          index: count,
+                          icon: "../../Content/images/winebar.png"
+                      });
+
+                    google.maps.event.addListener(marker, 'click', function() {
+                        
+                        var infowindow = new google.maps.InfoWindow();
+                        infowindow.setPosition(this.position);
+                        infowindow.setContent("@p.Photo.Title");
+
+                        if(activeInfoWindow){
+                            activeInfoWindow.close();
+                        }
+
+                        infowindow.open(map);
+
+                        activeInfoWindow = infowindow;
+
+                        $('.carousel').carousel(this.index);
+                    });
+
+                    count++;
+
+                    photoMarkers.push(marker);
+                </text>
+            }
+            map.fitBounds(bounds);
+        }
+
+
+    </script>
+}

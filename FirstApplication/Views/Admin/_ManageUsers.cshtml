@@ -1,0 +1,34 @@
+﻿@model IEnumerable<Chwinock.Models.User>
+
+<table class="table">
+        <tr>
+            <th>
+                UserID
+            </th>
+            <th>
+                Name
+            </th>
+            <th>
+                Chill Name
+            </th>
+            <th style="width: 122px;"></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ChillName)
+            </td>
+            <td>
+                <a href="/Admin/DeleteUser?userId=@item.UserID" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>

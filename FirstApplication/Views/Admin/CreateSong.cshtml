@@ -1,0 +1,62 @@
+﻿@model Chwinock.Models.CreateSongVM
+
+@{
+    ViewBag.Title = "Create Song";
+    
+    var index = 0;
+}
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+
+<div class="admin-page">
+    <form class="form-horizontal" method="post" action="/Admin/@ViewBag.Action" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Song</legend>
+            @Html.HiddenFor(model => model.Song.SongID)
+
+            <div class="control-group">
+                    <label class="control-label" for="Name">Name</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Song.Name)
+                    </div>
+            </div>
+            <div class="control-group">
+                    <label class="control-label" for="Artist">Artist</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Song.Artist)
+                    </div>
+            </div>
+            <div class="control-group">
+                    <label class="control-label" for="Url">Url</label>
+                    <div class="controls">    
+                        @Html.TextBoxFor(m => m.Song.Url)
+                    </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="controls">
+                    @foreach (var r in Model.Reports)
+                    {
+                        @:<input type="checkbox" id="@r.ReportID" name="AssociatedReports" value="@r.ReportID" /> @r.Title
+                        index++; 
+                    }
+                </div>
+            </div>
+
+            <div class="control-group">
+                <div class="controls">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </div>
+        </fieldset>
+    </form>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        @foreach (var r in Model.Song.Reports){
+            @:$('#@r.ReportID').prop('checked', true);
+        }
+    });
+</script>

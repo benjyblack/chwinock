@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Chwinock.Models.Song>
+
+<p>
+    <a href="/Admin/CreateSong"><button class="btn btn-primary">Add Song</button></a>
+</p>
+
+<table class="table">
+        <tr>
+            <th>
+                Artist
+            </th>
+            <th>
+                Name
+            </th>
+            <th style="width: 122px;"></th>
+        </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Artist)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                <a href="/Admin/EditSong?songId=@item.SongID" class="btn btn-warning">Edit</a>
+                <a href="/Admin/DeleteSong?songId=@item.SongID" class="btn btn-danger">Delete</a>
+            </td>
+        </tr>
+    }
+
+</table>
